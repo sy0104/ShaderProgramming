@@ -67,6 +67,18 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_VBORect);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	// vertex 만드는 작업
+	float lecture2[]
+		=
+	{
+		// 가운데		오른쪽		  오른쪽 위
+		0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0,
+	};	// 9 floats array
+
+	glGenBuffers(1, &m_VBOLecture2);	// openGL쪽에서 buffer를 하나 만들어서 m_VBOLecture2안에 넣어주게됨
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture2);	// 어떤 형태로 넣을지 Bind로 설정
+	glBufferData(GL_ARRAY_BUFFER, sizeof(lecture2), lecture2, GL_STATIC_DRAW);	// GL_STATIC_DRAW(사용방식), 보통 한번 넣고 업데이트 안하기 때문에 static_draw 사용
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -294,16 +306,31 @@ GLuint Renderer::CreateBmpTexture(char * filePath)
 	return temp;
 }
 
+// 그리는 부분
 void Renderer::Test()
 {
-	glUseProgram(m_SolidRectShader);
+	glUseProgram(m_SolidRectShader);	// 그러려니
 
-	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
-	glEnableVertexAttribArray(attribPosition);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
+	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");	// 일단 넘어감
+	glEnableVertexAttribArray(attribPosition);	// 얘도
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);	// 굳이 꼬이게 할 바에는 매번 Bind 해주는게 낫다
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 3, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+
+	glDisableVertexAttribArray(attribPosition);
+}
+
+void Renderer::Lecture2()
+{
+	glUseProgram(m_SolidRectShader);	// 그러려니
+
+	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");	// 일단 넘어감
+	glEnableVertexAttribArray(attribPosition);	// 얘도
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture2);	// 굳이 꼬이게 할 바에는 매번 Bind 해주는게 낫다
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glDisableVertexAttribArray(attribPosition);
 }

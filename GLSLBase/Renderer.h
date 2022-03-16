@@ -21,6 +21,7 @@ public:
 	GLuint CreateBmpTexture(char * filePath);
 	   
 	void Test();
+	void Lecture2();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -50,5 +51,7 @@ private:
 
 	GLuint m_VBORect = 0;
 	GLuint m_SolidRectShader = 0;
+
+	GLuint m_VBOLecture2 = 0;
 };
 
