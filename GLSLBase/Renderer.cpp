@@ -25,8 +25,10 @@ void Renderer::Initialize(int windowSizeX, int windowSizeY)
 	m_WindowSizeY = windowSizeY;
 
 	//Load shaders
+	// m_SolidRectShader: 셰이더 프로그램 아이디를 받아와서 저장하는 멤버변수
 	m_SolidRectShader = CompileShaders("./Shaders/SolidRect.vs", "./Shaders/SolidRect.fs");
-	
+	m_Lecture3Shader = CompileShaders("./Shaders/lecture3.vs", "./Shaders/lecture3.fs");
+
 	//Create VBOs
 	CreateVertexBufferObjects();
 
@@ -79,6 +81,20 @@ void Renderer::CreateVertexBufferObjects()
 	glGenBuffers(1, &m_VBOLecture2);	// openGL쪽에서 buffer를 하나 만들어서 m_VBOLecture2안에 넣어주게됨
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture2);	// 어떤 형태로 넣을지 Bind로 설정
 	glBufferData(GL_ARRAY_BUFFER, sizeof(lecture2), lecture2, GL_STATIC_DRAW);	// GL_STATIC_DRAW(사용방식), 보통 한번 넣고 업데이트 안하기 때문에 static_draw 사용
+
+
+	float lecture3[]
+		=
+	{	// vectex마다 색상 다르게
+		0.0, 0.0, 0.0, 1, 0, 0, 1,
+		1.0, 0.0, 0.0, 0, 1, 0, 1,
+		1.0, 1.0, 0.0, 0, 0, 1, 1
+	};	// 21 floats array
+
+	glGenBuffers(1, &m_VBOLecture3);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture3);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(lecture3), lecture3, GL_STATIC_DRAW);
+
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -331,6 +347,39 @@ void Renderer::Lecture2()
 	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	glDisableVertexAttribArray(attribPosition);
+}
+ 
+float gTime = 1.f;
+
+void Renderer::Lecture3()
+{
+	GLuint shader = m_Lecture3Shader;
+	glUseProgram(shader);
+
+	int attribPosition = glGetAttribLocation(shader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture3);
+	glVertexAttribPointer(attribPosition, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 7, 0);
+
+	int attribColor = glGetAttribLocation(shader, "a_Color");
+	glEnableVertexAttribArray(attribColor);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOLecture3);	// 위에서 해줬기 때문에 또 해줄 필요는 없음
+	glVertexAttribPointer(attribColor, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 7, (GLvoid*)(sizeof(float) * 3));	// x, y, z 뛰어넘고 4번째부터
+
+	// 선언한 아이에게 값을 줘야함. 값을 주려면 로케이션이 필요
+	int uniformLocTime = glGetUniformLocation(shader, "u_Time");
+	// ID에 -값이 들어감, u_Time get하는게 실패함 -> u_Time을 안쓰고 있어서 컴파일 타임에서 제외시킴
+	glUniform1f(uniformLocTime, gTime);
+
+	int uniformLocColor = glGetUniformLocation(shader, "u_Color");
+	glUniform4f(uniformLocColor, 1, 1, 1, 1);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	gTime -= 0.0001f;
+	if (gTime < 0.f) gTime = 1.f;
 
 	glDisableVertexAttribArray(attribPosition);
 }

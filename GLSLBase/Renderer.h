@@ -22,6 +22,7 @@ public:
 	   
 	void Test();
 	void Lecture2();
+	void Lecture3();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -53,5 +54,8 @@ private:
 	GLuint m_SolidRectShader = 0;
 
 	GLuint m_VBOLecture2 = 0;
+	GLuint m_VBOLecture3 = 0;
+
+	GLuint m_Lecture3Shader = 0;
 };
 

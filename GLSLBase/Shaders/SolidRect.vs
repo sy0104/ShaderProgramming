@@ -1,5 +1,6 @@
-#version 450
+#version 450	// 셰이더 버전
 
+// in: attribute
 in vec3 a_Position;
 
 void main()
