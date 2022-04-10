@@ -23,6 +23,7 @@ public:
 	void Test();
 	void Lecture2();
 	void Lecture3();
+	void Lecture3_Particle();
 
 private:
 	void Initialize(int windowSizeX, int windowSizeY);
@@ -31,6 +32,7 @@ private:
 	GLuint CompileShaders(char* filenameVS, char* filenameFS);
 	void CreateVertexBufferObjects(); 
 	unsigned char * Renderer::loadBMPRaw(const char * imagepath, unsigned int& outWidth, unsigned int& outHeight);
+	void CreateParticle(int count);
 
 	bool m_Initialized = false;
 	
@@ -57,5 +59,11 @@ private:
 	GLuint m_VBOLecture3 = 0;
 
 	GLuint m_Lecture3Shader = 0;
+
+	GLuint m_VBOSingleParticleQuad = 0;
+	GLuint m_Lecture3ParticleShader = 0;
+
+	GLuint m_VBOManyParticle = 0;
+	GLuint m_VBOManyParticleVertexCount = 0;
 };
 
