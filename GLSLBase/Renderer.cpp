@@ -119,6 +119,150 @@ void Renderer::CreateVertexBufferObjects()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(lecture3_singleParticle), lecture3_singleParticle, GL_STATIC_DRAW);
 }
 
+void Renderer::CreateParticle(int count)
+{
+	int floatCount = count * (3 + 3 + 1 + 1) * 3 * 2; // (x, y, z, vx, vy, vz, emit, life)
+	float* particleVertices = new float[floatCount];
+	int vertexCount = count * 3 * 2;
+
+	int index = 0;
+	float particleSize = 0.01f;
+
+	for (int i = 0; i < count; i++)
+	{
+		float randomValueX = 0.f;
+		float randomValueY = 0.f;
+		float randomValueZ = 0.f;
+		float randomValueVX = 0.f;
+		float randomValueVY = 0.f;
+		float randomValueVZ = 0.f;
+		float randomEmitTime = 0.f;
+		float randomLifeTime = 0.f;
+
+		randomValueX = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
+		randomValueY = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
+		randomValueZ = 0.f;
+		randomValueVX = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
+		randomValueVY = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
+		randomValueVZ = 0.f;
+		randomEmitTime = ((float)rand() / (float)RAND_MAX) * 5.f;
+		randomLifeTime = ((float)rand() / (float)RAND_MAX) * 2.f;
+
+		//v0
+		particleVertices[index] = -particleSize / 2.f + randomValueX;
+		index++;
+		particleVertices[index] = -particleSize / 2.f + randomValueY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Position XYZ
+		particleVertices[index] = randomValueVX;
+		index++;
+		particleVertices[index] = randomValueVY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Velocity XYZ
+		particleVertices[index] = randomEmitTime;
+		index++; // Emit Time
+		particleVertices[index] = randomLifeTime;
+		index++; // Life Time
+
+		//v1
+		particleVertices[index] = particleSize / 2.f + randomValueX;
+		index++;
+		particleVertices[index] = -particleSize / 2.f + randomValueY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++;
+		particleVertices[index] = randomValueVX;
+		index++;
+		particleVertices[index] = randomValueVY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Velocity XYZ
+		particleVertices[index] = randomEmitTime;
+		index++; // Emit Time
+		particleVertices[index] = randomLifeTime;
+		index++; // Life Time
+
+		//v2
+		particleVertices[index] = particleSize / 2.f + randomValueX;
+		index++;
+		particleVertices[index] = particleSize / 2.f + randomValueY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++;
+		particleVertices[index] = randomValueVX;
+		index++;
+		particleVertices[index] = randomValueVY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Velocity XYZ
+		particleVertices[index] = randomEmitTime;
+		index++; // Emit Time
+		particleVertices[index] = randomLifeTime;
+		index++; // Life Time
+
+		//v3
+		particleVertices[index] = -particleSize / 2.f + randomValueX;
+		index++;
+		particleVertices[index] = -particleSize / 2.f + randomValueY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++;
+		particleVertices[index] = randomValueVX;
+		index++;
+		particleVertices[index] = randomValueVY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Velocity XYZ
+		particleVertices[index] = randomEmitTime;
+		index++; // Emit Time
+		particleVertices[index] = randomLifeTime;
+		index++; // Life Time
+
+		//v4
+		particleVertices[index] = particleSize / 2.f + randomValueX;
+		index++;
+		particleVertices[index] = particleSize / 2.f + randomValueY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++;
+		particleVertices[index] = randomValueVX;
+		index++;
+		particleVertices[index] = randomValueVY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Velocity XYZ
+		particleVertices[index] = randomEmitTime;
+		index++; // Emit Time
+		particleVertices[index] = randomLifeTime;
+		index++; // Life Time
+
+		//v5
+		particleVertices[index] = -particleSize / 2.f + randomValueX;
+		index++;
+		particleVertices[index] = particleSize / 2.f + randomValueY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++;
+		particleVertices[index] = randomValueVX;
+		index++;
+		particleVertices[index] = randomValueVY;
+		index++;
+		particleVertices[index] = 0.f;
+		index++; // Velocity XYZ
+		particleVertices[index] = randomEmitTime;
+		index++; // Emit Time
+		particleVertices[index] = randomLifeTime;
+		index++; // Life Time
+	}
+	glGenBuffers(1, &m_VBOManyParticle);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOManyParticle);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * floatCount, particleVertices, GL_STATIC_DRAW);
+	m_VBOManyParticleVertexCount = vertexCount;
+	delete[] particleVertices;
+}
+
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
 {
 	//쉐이더 오브젝트 생성
@@ -406,150 +550,6 @@ void Renderer::Lecture3()
 	glDisableVertexAttribArray(attribPosition);
 }
 
-void Renderer::CreateParticle(int count)
-{
-	int floatCount = count * (3 + 3 + 1 + 1) * 3 * 2; // (x, y, z, vx, vy, vz, emit, life)
-	float* particleVertices = new float[floatCount];
-	int vertexCount = count * 3 * 2;
-
-	int index = 0;
-	float particleSize = 0.01f;
-
-	for (int i = 0; i < count; i++)
-	{
-		float randomValueX = 0.f;
-		float randomValueY = 0.f;
-		float randomValueZ = 0.f;
-		float randomValueVX = 0.f;
-		float randomValueVY = 0.f;
-		float randomValueVZ = 0.f;
-		float randomEmitTime = 0.f;
-		float randomLifeTime = 0.f;
-
-		randomValueX = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
-		randomValueY = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
-		randomValueZ = 0.f;
-		randomValueVX = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
-		randomValueVY = ((float)rand() / (float)RAND_MAX - 0.5f) * 2.f; // -1~1
-		randomValueVZ = 0.f;
-		randomEmitTime = ((float)rand() / (float)RAND_MAX) * 5.f;
-		randomLifeTime = ((float)rand() / (float)RAND_MAX) * 2.f;
-		
-		//v0
-		particleVertices[index] = -particleSize / 2.f + randomValueX;
-		index++;
-		particleVertices[index] = -particleSize / 2.f + randomValueY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Position XYZ
-		particleVertices[index] = randomValueVX;
-		index++;
-		particleVertices[index] = randomValueVY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Velocity XYZ
-		particleVertices[index] = randomEmitTime;
-		index++; // Emit Time
-		particleVertices[index] = randomLifeTime;
-		index++; // Life Time
-
-		//v1
-		particleVertices[index] = particleSize / 2.f + randomValueX;
-		index++;
-		particleVertices[index] = -particleSize / 2.f + randomValueY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++;
-		particleVertices[index] = randomValueVX;
-		index++;
-		particleVertices[index] = randomValueVY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Velocity XYZ
-		particleVertices[index] = randomEmitTime;
-		index++; // Emit Time
-		particleVertices[index] = randomLifeTime;
-		index++; // Life Time
-
-		//v2
-		particleVertices[index] = particleSize / 2.f + randomValueX;
-		index++;
-		particleVertices[index] = particleSize / 2.f + randomValueY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++;
-		particleVertices[index] = randomValueVX;
-		index++;
-		particleVertices[index] = randomValueVY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Velocity XYZ
-		particleVertices[index] = randomEmitTime;
-		index++; // Emit Time
-		particleVertices[index] = randomLifeTime;
-		index++; // Life Time
-
-		//v3
-		particleVertices[index] = -particleSize / 2.f + randomValueX;
-		index++;
-		particleVertices[index] = -particleSize / 2.f + randomValueY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++;
-		particleVertices[index] = randomValueVX;
-		index++;
-		particleVertices[index] = randomValueVY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Velocity XYZ
-		particleVertices[index] = randomEmitTime;
-		index++; // Emit Time
-		particleVertices[index] = randomLifeTime;
-		index++; // Life Time
-
-		//v4
-		particleVertices[index] = particleSize / 2.f + randomValueX;
-		index++;
-		particleVertices[index] = particleSize / 2.f + randomValueY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++;
-		particleVertices[index] = randomValueVX;
-		index++;
-		particleVertices[index] = randomValueVY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Velocity XYZ
-		particleVertices[index] = randomEmitTime;
-		index++; // Emit Time
-		particleVertices[index] = randomLifeTime;
-		index++; // Life Time
-
-		//v5
-		particleVertices[index] = -particleSize / 2.f + randomValueX;
-		index++;
-		particleVertices[index] = particleSize / 2.f + randomValueY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++;
-		particleVertices[index] = randomValueVX;
-		index++;
-		particleVertices[index] = randomValueVY;
-		index++;
-		particleVertices[index] = 0.f;
-		index++; // Velocity XYZ
-		particleVertices[index] = randomEmitTime;
-		index++; // Emit Time
-		particleVertices[index] = randomLifeTime;
-		index++; // Life Time
-	}
-	glGenBuffers(1, &m_VBOManyParticle);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBOManyParticle);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * floatCount, particleVertices, GL_STATIC_DRAW);
-	m_VBOManyParticleVertexCount = vertexCount;
-	delete[] particleVertices;
-}
-
 void Renderer::Lecture3_Particle()
 {
 	GLuint shader = m_Lecture3ParticleShader;
@@ -580,7 +580,7 @@ void Renderer::Lecture3_Particle()
 	int uniformAccel = glGetUniformLocation(shader, "u_Accel");
 	glUniform3f(uniformAccel, std::sin(gTime), std::cos(gTime), 0.0);
 	
-	gTime += 0.001f;
+	gTime += 0.0001f;
 	glDrawArrays(GL_TRIANGLES, 0, m_VBOManyParticleVertexCount);
 
 	glDisableVertexAttribArray(attribPosition);
